@@ -5,10 +5,9 @@ export default function CosmicHUDStrip({ active }: { active: boolean }) {
 
   return (
     <div className="fixed top-0 left-0 right-0 z-[9997] pointer-events-none">
-      <div className="w-full py-3 text-center text-purple-300 font-semibold tracking-[0.3em] text-sm
-        bg-gradient-to-r from-purple-900/60 via-fuchsia-700/40 to-purple-900/60
-        backdrop-blur-md border-b border-purple-500/40 shadow-[0_0_25px_rgba(168,85,247,0.4)]
-        animate-hudGlow">
+      <div
+        className="w-full py-3 text-center text-purple-300 font-semibold tracking-[0.3em] text-sm bg-gradient-to-r from-purple-900/60 via-fuchsia-700/40 to-purple-900/60 backdrop-blur-md border-b border-purple-500/40 shadow-[0_0_25px_rgba(168,85,247,0.4)] animate-hudGlow"
+      >
         CONTAINMENT MODE ACTIVE
       </div>
 
