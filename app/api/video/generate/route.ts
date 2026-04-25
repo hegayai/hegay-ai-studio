@@ -5,7 +5,7 @@ import {
   canGenerateVideo,
   validateVideoDuration,
 } from "@/lib/auth";
-import { prisma } from "@/core/db/client";
+import { prisma } from "@/src/core/db/client";
 
 const FAL_KEY = process.env.FAL_KEY;
 

@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { prisma } from "@/core/db/client";
+import { prisma } from "@/src/core/db/client";
 import { hegayRouter } from "@/lib/hegay-router";
 
 export async function POST(req: Request) {

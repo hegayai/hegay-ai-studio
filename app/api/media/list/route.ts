@@ -1,16 +1,12 @@
 import { NextResponse } from "next/server";
-import { prisma } from "@/core/db/client";
-import { getCurrentUserFromCookie } from "@/lib/auth";
+import { prisma } from "@/src/core/db/client";
+import { getCurrentUser } from "@/lib/auth";
 
 export async function GET() {
   try {
-    const user = await getCurrentUserFromCookie();
-
+    const user = await getCurrentUser();
     if (!user) {
-      return NextResponse.json(
-        { error: "Unauthorized" },
-        { status: 401 }
-      );
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
     const media = await prisma.media.findMany({
@@ -18,13 +14,10 @@ export async function GET() {
       orderBy: { createdAt: "desc" },
     });
 
-    return NextResponse.json({
-      success: true,
-      media,
-    });
+    return NextResponse.json({ media });
   } catch (err: any) {
     return NextResponse.json(
-      { error: err.message || "Failed to fetch media" },
+      { error: err.message || "Failed to load media" },
       { status: 500 }
     );
   }
