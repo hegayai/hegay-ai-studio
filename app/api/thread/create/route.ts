@@ -5,28 +5,16 @@ import { getCurrentUser } from "@/lib/auth";
 export async function POST(req: Request) {
   try {
     const user = await getCurrentUser(req);
-
     if (!user) {
-      return NextResponse.json(
-        { error: "Unauthorized" },
-        { status: 401 }
-      );
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    const { title, content } = await req.json();
-
-    if (!title || !content) {
-      return NextResponse.json(
-        { error: "Missing thread title or content" },
-        { status: 400 }
-      );
-    }
+    const { title } = await req.json();
 
     const thread = await prisma.thread.create({
       data: {
         userId: user.id,
-        title,
-        content,
+        title: title || null,
       },
     });
 
@@ -34,9 +22,10 @@ export async function POST(req: Request) {
       success: true,
       thread,
     });
-  } catch (err: any) {
+  } catch (error) {
+    console.error("Thread Create Error:", error);
     return NextResponse.json(
-      { error: err.message || "Failed to create thread" },
+      { error: "Failed to create thread" },
       { status: 500 }
     );
   }

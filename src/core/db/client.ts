@@ -1,18 +1,17 @@
 // src/core/db/client.ts
 
-import { PrismaClient } from "prisma/prisma-client";
-import { Pool } from "pg";
-import { PrismaPg } from "@prisma/adapter-pg";
+import { PrismaClient } from "@prisma/client";
 
-// Create a PostgreSQL connection pool
-const pool = new Pool({
-  connectionString: process.env.DATABASE_URL,
-});
+const globalForPrisma = globalThis as unknown as {
+  prisma: PrismaClient | undefined;
+};
 
-// Create the Prisma adapter
-const adapter = new PrismaPg(pool);
+export const prisma =
+  globalForPrisma.prisma ??
+  new PrismaClient({
+    log: ["error", "warn"],
+  });
 
-// Create the Prisma client using the adapter
-export const prisma = new PrismaClient({
-  adapter,
-});
+if (process.env.NODE_ENV !== "production") {
+  globalForPrisma.prisma = prisma;
+}

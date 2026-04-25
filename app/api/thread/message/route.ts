@@ -5,27 +5,23 @@ import { getCurrentUser } from "@/lib/auth";
 export async function POST(req: Request) {
   try {
     const user = await getCurrentUser(req);
-
     if (!user) {
-      return NextResponse.json(
-        { error: "Unauthorized" },
-        { status: 401 }
-      );
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
     const { threadId, content } = await req.json();
 
     if (!threadId || !content) {
       return NextResponse.json(
-        { error: "Missing threadId or content" },
+        { error: "Missing required fields" },
         { status: 400 }
       );
     }
 
     const message = await prisma.message.create({
       data: {
-        userId: user.id,
         threadId,
+        role: "user",
         content,
       },
     });
@@ -34,9 +30,10 @@ export async function POST(req: Request) {
       success: true,
       message,
     });
-  } catch (err: any) {
+  } catch (error) {
+    console.error("Thread Message Error:", error);
     return NextResponse.json(
-      { error: err.message || "Failed to send message" },
+      { error: "Failed to send message" },
       { status: 500 }
     );
   }

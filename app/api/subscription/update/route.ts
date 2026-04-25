@@ -1,34 +1,29 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/src/core/db/client";
-import { getCurrentUser } from "@/lib/auth";
 
 export async function POST(req: Request) {
   try {
-    const user = await getCurrentUser(req);
+    const { userId, planId, status } = await req.json();
 
-    if (!user) {
+    if (!userId || !planId) {
       return NextResponse.json(
-        { error: "Unauthorized" },
-        { status: 401 }
-      );
-    }
-
-    const { plan, status } = await req.json();
-
-    if (!plan || !status) {
-      return NextResponse.json(
-        { error: "Missing subscription plan or status" },
+        { error: "Missing required fields" },
         { status: 400 }
       );
     }
 
-    const updated = await prisma.subscription.upsert({
-      where: { userId: user.id },
-      update: { plan, status },
+    // Upsert the user's subscription
+    const updated = await prisma.userSubscription.upsert({
+      where: { userId },
+      update: {
+        planId,
+        active: status ?? true,
+      },
       create: {
-        userId: user.id,
-        plan,
-        status,
+        userId,
+        planId,
+        active: status ?? true,
+        expiresAt: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000), // 30 days
       },
     });
 
@@ -36,9 +31,10 @@ export async function POST(req: Request) {
       success: true,
       subscription: updated,
     });
-  } catch (err: any) {
+  } catch (error) {
+    console.error("Subscription Update Error:", error);
     return NextResponse.json(
-      { error: err.message || "Failed to update subscription" },
+      { error: "Failed to update subscription" },
       { status: 500 }
     );
   }

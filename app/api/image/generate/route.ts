@@ -55,12 +55,13 @@ export async function POST(req: Request) {
 
     const imageUrl = result.images[0].url;
 
+    // ⭐ FIXED: Removed invalid "title" field
     await prisma.media.create({
       data: {
         userId: user.id,
         type: "image",
         url: imageUrl,
-        title: prompt.slice(0, 120),
+        prompt, // valid field in your Prisma schema
       },
     });
 

@@ -1,43 +1,42 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/src/core/db/client";
-import { getCurrentUser } from "@/lib/auth";
 
 export async function POST(req: Request) {
   try {
-    const user = await getCurrentUser(req);
+    const { userId, key, content } = await req.json();
 
-    if (!user) {
+    if (!userId || !key || !content) {
       return NextResponse.json(
-        { error: "Unauthorized" },
-        { status: 401 }
-      );
-    }
-
-    const { url, type, title } = await req.json();
-
-    if (!url || !type) {
-      return NextResponse.json(
-        { error: "Missing media url or type" },
+        { error: "Missing required fields" },
         { status: 400 }
       );
     }
 
-    const saved = await prisma.media.create({
-      data: {
-        userId: user.id,
-        url,
-        type,
-        title: title || "Untitled",
+    const saved = await prisma.memory.upsert({
+      where: {
+        userId_key: {
+          userId,
+          key,
+        },
+      },
+      update: {
+        content,
+      },
+      create: {
+        userId,
+        key,
+        content,
       },
     });
 
     return NextResponse.json({
       success: true,
-      media: saved,
+      memory: saved,
     });
-  } catch (err: any) {
+  } catch (error) {
+    console.error("Memory Save Error:", error);
     return NextResponse.json(
-      { error: err.message || "Failed to save media" },
+      { error: "Failed to save memory" },
       { status: 500 }
     );
   }

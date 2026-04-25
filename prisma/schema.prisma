@@ -1,5 +1,5 @@
 // ------------------------------------------------------
-// Prisma 7 – Hegay AI Studio – Final Clean Schema
+// Prisma – Hegay AI Studio – Final Clean Schema
 // ------------------------------------------------------
 
 generator client {
@@ -8,6 +8,7 @@ generator client {
 
 datasource db {
   provider = "postgresql"
+  url      = env("DATABASE_URL")
 }
 
 // ------------------------------------------------------
@@ -321,7 +322,7 @@ model Usage {
 
   user User @relation(fields: [userId], references: [id])
 
-  @@index([userId, date])   // ⭐ NEW
+  @@index([userId, date])
 }
 
 // ------------------------------------------------------
@@ -336,11 +337,11 @@ model Media {
   prompt    String?
   metadata  Json?
   createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt   // ⭐ NEW
+  updatedAt DateTime @updatedAt
 
   user User @relation(fields: [userId], references: [id])
 
-  @@index([userId, createdAt])    // ⭐ NEW
+  @@index([userId, createdAt])
 }
 
 // ------------------------------------------------------
