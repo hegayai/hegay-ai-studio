@@ -13,10 +13,9 @@ export async function POST(req: Request) {
       );
     }
 
-    // Process message through your custom router (direct function call)
+    // Correct: hegayRouter is a function, not an object with .process()
     const reply = await hegayRouter(message);
 
-    // Save chat message + reply
     const saved = await prisma.chat.create({
       data: {
         userId,
