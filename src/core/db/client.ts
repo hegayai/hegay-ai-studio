@@ -1,8 +1,8 @@
 // src/core/db/client.ts
 
-import { PrismaPg } from "@prisma/adapter-pg";
+import { PrismaClient } from "prisma/prisma-client";
 import { Pool } from "pg";
-import { PrismaClient } from "@prisma/client/edge";
+import { PrismaPg } from "@prisma/adapter-pg";
 
 // Create a PostgreSQL connection pool
 const pool = new Pool({
