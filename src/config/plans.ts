@@ -1,13 +1,15 @@
-// config/plans.ts
 export type PlanId = "free" | "starter" | "pro" | "creator" | "admin";
 
-export const PLAN_LIMITS: Record<PlanId, {
-  maxImagesPerDay: number;
-  maxVideosPerDay: number;
-  maxVideoSeconds: number;
-}> = {
+export const PLAN_LIMITS: Record<
+  PlanId,
+  {
+    maxImagesPerDay: number;
+    maxVideosPerDay: number;
+    maxVideoSeconds: number;
+  }
+> = {
   free: {
-    maxImagesPerDay: 0,      // or 1 if you decide
+    maxImagesPerDay: 0,
     maxVideosPerDay: 0,
     maxVideoSeconds: 0,
   },
@@ -29,6 +31,6 @@ export const PLAN_LIMITS: Record<PlanId, {
   admin: {
     maxImagesPerDay: 9999,
     maxVideosPerDay: 9999,
-    maxVideoSeconds: 120, // 2 minutes
+    maxVideoSeconds: 120,
   },
 };

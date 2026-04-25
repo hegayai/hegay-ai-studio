@@ -1,7 +1,7 @@
-import { prisma } from "@/core/db/client";
+import { prisma } from "@/src/core/db/client";
 import { cookies } from "next/headers";
 import jwt from "jsonwebtoken";
-import { PLAN_LIMITS, PlanId } from "@/config/plans";
+import { PLAN_LIMITS, PlanId } from "@/src/config/plans";
 
 const SECRET = process.env.AUTH_SECRET || "default_secret_key";
 
