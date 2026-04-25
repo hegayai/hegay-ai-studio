@@ -5,7 +5,6 @@ export async function GET() {
   try {
     const start = Date.now();
 
-    // Simple DB check
     await prisma.user.count();
 
     const duration = Date.now() - start;

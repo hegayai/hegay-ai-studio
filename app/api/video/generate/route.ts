@@ -31,7 +31,6 @@ export async function POST(req: Request) {
 
     const duration = Number(seconds) || 6;
 
-    // PLAN DURATION CHECK
     if (!validateVideoDuration(user.planId as any, duration)) {
       return NextResponse.json(
         { error: "Video duration exceeds your plan limit" },
@@ -39,7 +38,6 @@ export async function POST(req: Request) {
       );
     }
 
-    // DAILY USAGE CHECK
     const usage = await getTodayUsage(user.id);
     if (!canGenerateVideo(user.planId as any, usage)) {
       return NextResponse.json(
@@ -48,7 +46,6 @@ export async function POST(req: Request) {
       );
     }
 
-    // CALL FAL.AI VIDEO MODEL
     const response = await fetch("https://fal.run/fal-ai/luma-dream-machine", {
       method: "POST",
       headers: {
@@ -70,7 +67,6 @@ export async function POST(req: Request) {
       );
     }
 
-    // SAVE MEDIA TO DB
     await prisma.media.create({
       data: {
         userId: user.id,
@@ -80,7 +76,6 @@ export async function POST(req: Request) {
       },
     });
 
-    // INCREMENT USAGE
     await prisma.usage.update({
       where: { id: usage.id },
       data: { videosUsed: usage.videosUsed + 1 },

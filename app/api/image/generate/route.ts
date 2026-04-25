@@ -27,7 +27,6 @@ export async function POST(req: Request) {
       );
     }
 
-    // DAILY USAGE CHECK
     const usage = await getTodayUsage(user.id);
     if (!canGenerateImage(user.planId as any, usage)) {
       return NextResponse.json(
@@ -36,7 +35,6 @@ export async function POST(req: Request) {
       );
     }
 
-    // CALL FAL.AI FLUX-PRO
     const response = await fetch("https://fal.run/fal-ai/flux-pro", {
       method: "POST",
       headers: {
@@ -57,7 +55,6 @@ export async function POST(req: Request) {
 
     const imageUrl = result.images[0].url;
 
-    // SAVE MEDIA TO DB
     await prisma.media.create({
       data: {
         userId: user.id,
@@ -67,7 +64,6 @@ export async function POST(req: Request) {
       },
     });
 
-    // INCREMENT USAGE
     await prisma.usage.update({
       where: { id: usage.id },
       data: { imagesUsed: usage.imagesUsed + 1 },

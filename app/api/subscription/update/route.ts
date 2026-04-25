@@ -4,7 +4,7 @@ import { getCurrentUser } from "@/lib/auth";
 
 export async function POST(req: Request) {
   try {
-    const user = await getCurrentUser();
+    const user = await getCurrentUser(req);
 
     if (!user) {
       return NextResponse.json(
